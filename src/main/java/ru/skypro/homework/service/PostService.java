@@ -4,9 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.entity.Post;
 import ru.skypro.homework.repository.PostRepository;
-
 import java.util.List;
-
+//
 @Service
 @AllArgsConstructor
 public class PostService {

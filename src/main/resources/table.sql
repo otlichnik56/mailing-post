@@ -7,14 +7,12 @@ CREATE TABLE mailing
     recipient_name      TEXT
 );
 
-
 CREATE TABLE post
 (
     index       SERIAL PRIMARY KEY UNIQUE,
     name        TEXT,
     address     TEXT
 );
-
 
 CREATE TABLE track
 (

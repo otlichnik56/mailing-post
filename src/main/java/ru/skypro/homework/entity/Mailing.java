@@ -3,7 +3,7 @@ package ru.skypro.homework.entity;
 import lombok.Data;
 import ru.skypro.homework.model.Type;
 import javax.persistence.*;
-
+//
 @Data
 @Entity
 @Table(name = "mailing")
