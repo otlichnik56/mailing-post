@@ -3,6 +3,7 @@ package ru.skypro.homework.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.entity.Mailing;
+import ru.skypro.homework.entity.Post;
 import ru.skypro.homework.repository.MailingRepository;
 import java.util.List;
 //
@@ -20,11 +21,21 @@ public class MailingService {
     }
 
     public Mailing createMailing(Mailing mailing) {
-        return mailingRepository.save(mailing);
+        Mailing mailingCreate = mailingRepository.findById(mailing.getId()).orElse(null);
+        if (mailingCreate == null) {
+            return mailingRepository.save(mailing);
+        } else {
+            return null;
+        }
     }
 
     public Mailing updateMailing(Mailing mailing) {
-        return mailingRepository.save(mailing);
+        Mailing mailingUpdate = mailingRepository.findById(mailing.getId()).orElse(null);
+        if (mailingUpdate != null) {
+            return mailingRepository.save(mailing);
+        } else {
+            return null;
+        }
     }
 
     public boolean deleteMailing(Integer id) {

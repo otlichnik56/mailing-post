@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.entity.Post;
 import ru.skypro.homework.service.PostService;
@@ -28,7 +29,7 @@ public class PostController {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Все почтовые отделения",
+                    description = "Вывод всех почтовых отделений",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = Post[].class)
@@ -51,19 +52,44 @@ public class PostController {
             )
     })
     @GetMapping("/{index}")
-    public Post getPost(@Parameter(name = "Индекс почтового отделения", example = "461505") @PathVariable Integer index) {
-        return postService.getPost(index);
+    public ResponseEntity<?> getPost(@Parameter(name = "Индекс почтового отделения", example = "461505") @PathVariable Integer index) {
+        logger.info("PostController. method getPost. Post = " + index);
+        Post post = postService.getPost(index);
+        if (post == null) {
+            return ResponseEntity.status(404).body("Почтового отделения с таким индексом не существует");
+        } else {
+            return ResponseEntity.status(200).body(post);
+        }
     }
 
     @PostMapping
-    public Post createPost(@RequestBody Post post) {
-        return postService.createPost(post);
+    public ResponseEntity<?> createPost(@RequestBody Post post) {
+        logger.info("PostController. method createPost. Post = " + post);
+        if (postService.createPost(post) == null) {
+            return ResponseEntity.status(409).body("Возможно, почтовое отделение с таким индексом уже существует");
+        } else {
+            return ResponseEntity.status(200).body(post);
+        }
     }
 
-    @PatchMapping("/{index}")
-    public Post updatePost(@PathVariable Integer index,
-                           @RequestParam Post post) {
-        return postService.updatePost(index, post);
+    @PatchMapping
+    public ResponseEntity<?> updatePost(@RequestParam Post post) {
+        logger.info("PostController. method updatePost. Post = " + post);
+        if (postService.updatePost(post) == null) {
+            return ResponseEntity.status(404).body("Почтового отделения с таким индексом не существует");
+        } else {
+            return ResponseEntity.status(200).body(post);
+        }
+    }
+
+    @DeleteMapping("/{index}")
+    public ResponseEntity<?> deletePost(@PathVariable Integer index) {
+        logger.info("PostController. method deletePost. Index = " + index);
+        if (postService.deletePost(index)) {
+            return ResponseEntity.status(200).body("Почтовое отделение успешно удалено");
+        } else {
+            return ResponseEntity.status(404).body("Почтовое отделение с таким индексом не найдено");
+        }
     }
 
 }

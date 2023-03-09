@@ -20,12 +20,21 @@ public class PostService {
     }
 
     public Post createPost(Post post) {
-        return postRepository.save(post);
+        Post postCreate = postRepository.findById(post.getIndex()).orElse(null);
+        if (postCreate == null) {
+            return postRepository.save(post);
+        } else {
+            return null;
+        }
     }
 
-    public Post updatePost(Integer index, Post post) {
-        Post post1 = postRepository.findById(index).orElse(null);
-        return postRepository.save(post);
+    public Post updatePost(Post post) {
+        Post postUpdate = postRepository.findById(post.getIndex()).orElse(null);
+        if (postUpdate != null) {
+            return postRepository.save(post);
+        } else {
+            return null;
+        }
     }
 
     public boolean deletePost(Integer index) {
