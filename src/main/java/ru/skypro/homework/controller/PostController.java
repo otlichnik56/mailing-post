@@ -40,22 +40,13 @@ public class PostController {
         return postService.getAllPost();
     }
 
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Поиск почтового отделения по индексу",
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = Post.class)
-                    )
-            )
-    })
+
     @GetMapping("/{index}")
-    public ResponseEntity<?> getPost(@Parameter(name = "Индекс почтового отделения", example = "461505") @PathVariable Integer index) {
+    public ResponseEntity<?> getPost(@PathVariable(value = "index") Integer index) {
         logger.info("PostController. method getPost. Post = " + index);
         Post post = postService.getPost(index);
         if (post == null) {
-            return ResponseEntity.status(404).body("Почтового отделения с таким индексом не существует");
+            return ResponseEntity.status(404).body("Post office not found");
         } else {
             return ResponseEntity.status(200).body(post);
         }
@@ -65,17 +56,17 @@ public class PostController {
     public ResponseEntity<?> createPost(@RequestBody Post post) {
         logger.info("PostController. method createPost. Post = " + post);
         if (postService.createPost(post) == null) {
-            return ResponseEntity.status(409).body("Возможно, почтовое отделение с таким индексом уже существует");
+            return ResponseEntity.status(409).body("Perhaps a post office with this postal code already exists");
         } else {
             return ResponseEntity.status(200).body(post);
         }
     }
 
     @PatchMapping
-    public ResponseEntity<?> updatePost(@RequestParam Post post) {
+    public ResponseEntity<?> updatePost(@RequestBody Post post) {
         logger.info("PostController. method updatePost. Post = " + post);
         if (postService.updatePost(post) == null) {
-            return ResponseEntity.status(404).body("Почтового отделения с таким индексом не существует");
+            return ResponseEntity.status(404).body("Post office not found");
         } else {
             return ResponseEntity.status(200).body(post);
         }
@@ -85,9 +76,9 @@ public class PostController {
     public ResponseEntity<?> deletePost(@PathVariable Integer index) {
         logger.info("PostController. method deletePost. Index = " + index);
         if (postService.deletePost(index)) {
-            return ResponseEntity.status(200).body("Почтовое отделение успешно удалено");
+            return ResponseEntity.status(200).body("Post office successfully deleted");
         } else {
-            return ResponseEntity.status(404).body("Почтовое отделение с таким индексом не найдено");
+            return ResponseEntity.status(404).body("Post office not found");
         }
     }
 

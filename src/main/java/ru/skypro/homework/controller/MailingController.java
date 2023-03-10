@@ -27,11 +27,11 @@ public class MailingController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getMailing(@Parameter(name = "Индекс почтового отделения", example = "461505") @PathVariable Integer id) {
+    public ResponseEntity<?> getMailing(@PathVariable Integer id) {
         logger.info("MailingController. method getMailing. Mailing id = " + id);
         Mailing mailing = mailingService.getMailing(id);
         if (mailing == null) {
-            return ResponseEntity.status(404).body("Такого почтового отправления не существует");
+            return ResponseEntity.status(404).body("Mail item with this identifier was not found");
         } else {
             return ResponseEntity.status(200).body(mailing);
         }
@@ -41,17 +41,17 @@ public class MailingController {
     public ResponseEntity<?> createMailing(@RequestBody Mailing mailing) {
         logger.info("MailingController. method createMailing. Mailing = " + mailing);
         if (mailingService.createMailing(mailing) == null) {
-            return ResponseEntity.status(409).body("Возможно, почтовое отправление с таким идентификатором уже существует");
+            return ResponseEntity.status(409).body("Perhaps a mailing with this identifier already exists");
         } else {
             return ResponseEntity.status(200).body(mailing);
         }
     }
 
     @PatchMapping
-    public ResponseEntity<?> updateMailing(@RequestParam Mailing mailing) {
+    public ResponseEntity<?> updateMailing(@RequestBody Mailing mailing) {
         logger.info("MailingController. method updateMailing. Mailing = " + mailing);
         if (mailingService.updateMailing(mailing) == null) {
-            return ResponseEntity.status(404).body("Почтового отправления с таким идентификатором не существует");
+            return ResponseEntity.status(404).body("Mail item with this identifier was not found");
         } else {
             return ResponseEntity.status(200).body(mailing);
         }
@@ -61,9 +61,9 @@ public class MailingController {
     public ResponseEntity<?> deleteMailing(@PathVariable Integer id) {
         logger.info("MailingController. method deleteMailing. Id = " + id);
         if (mailingService.deleteMailing(id)) {
-            return ResponseEntity.status(200).body("Почтовое отправление успешно удалено");
+            return ResponseEntity.status(200).body("Mail item deleted successfully");
         } else {
-            return ResponseEntity.status(404).body("Почтовое отправление с таким индексом не найдено");
+            return ResponseEntity.status(404).body("Mail item with this identifier was not found");
         }
     }
 

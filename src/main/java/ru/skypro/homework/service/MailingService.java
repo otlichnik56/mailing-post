@@ -39,7 +39,12 @@ public class MailingService {
 
     public boolean deleteMailing(Integer id) {
         Mailing mailing = mailingRepository.findById(id).orElse(null);
-        return mailing != null;
+        if (mailing == null) {
+            return false;
+        } else {
+            mailingRepository.deleteById(id);
+            return true;
+        }
     }
 
 }

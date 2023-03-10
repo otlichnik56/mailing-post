@@ -7,4 +7,6 @@ import ru.skypro.homework.entity.Post;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer> {
 
+    Post findByIndex(Integer index);
+
 }

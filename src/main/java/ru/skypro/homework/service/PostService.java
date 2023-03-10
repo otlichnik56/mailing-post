@@ -29,7 +29,7 @@ public class PostService {
     }
 
     public Post updatePost(Post post) {
-        Post postUpdate = postRepository.findById(post.getIndex()).orElse(null);
+        Post postUpdate = postRepository.findByIndex(post.getIndex());
         if (postUpdate != null) {
             return postRepository.save(post);
         } else {
@@ -39,7 +39,12 @@ public class PostService {
 
     public boolean deletePost(Integer index) {
         Post post = postRepository.findById(index).orElse(null);
-        return post != null;
+        if (post == null) {
+            return false;
+        } else {
+            postRepository.deleteById(index);
+            return true;
+        }
     }
 
 }
