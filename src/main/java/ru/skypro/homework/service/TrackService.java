@@ -47,6 +47,12 @@ public class TrackService {
         return trackHistory.stream().map(this::getString).collect(Collectors.toList());
     }
 
+    /**
+     * Генерирует строку ответа для контроллера
+     * @param status
+     * @param trackDto
+     * @return
+     */
     private String generateTextAndSaveEntity(Status status, TrackDto trackDto) {
         if (checkForAvailability(trackDto)) {
             if (checkLogic(status, trackDto)) {
@@ -62,6 +68,11 @@ public class TrackService {
         }
     }
 
+    /**
+     * Генерирует строку в зависимости от пришедшей сущности Track
+     * @param track
+     * @return
+     */
     private String getString(Track track) {
         switch (track.getStatus()) {
             case REGISTERED:
@@ -77,6 +88,12 @@ public class TrackService {
         }
     }
 
+    /**
+     * Вводит значения TrackDto в сущность Track
+     * а также тукущую дату и время и статус переданный публичными методами текущего сервиса
+     * @param trackDto
+     * @return
+     */
     private Track insert(TrackDto trackDto) {
         Track track = new Track();
         track.setMailingId(trackDto.getMailing());
@@ -85,12 +102,25 @@ public class TrackService {
         return track;
     }
 
+    /**
+     * Проверяет на наличие почтового отправления с таким ID
+     * и почтового отделения с таким индексом
+     * @param trackDto
+     * @return
+     */
     private boolean checkForAvailability(TrackDto trackDto) {
         Post post = postRepository.findByIndex(trackDto.getPost());
         Mailing mailing = mailingRepository.findById(trackDto.getMailing()).orElse(null);
         return post != null && mailing != null;
     }
 
+    /**
+     * Проверяет на логику движения почтового отправления,
+     * например отправление было зарегистрировано в отделении 101010 значит следующим шагом оно должно покинуть отделение 101010
+     * @param status
+     * @param trackDto
+     * @return
+     */
     private boolean checkLogic(Status status, TrackDto trackDto) {
         List<Track> history = trackRepository.findByMailingId(trackDto.getMailing());
         if (history.isEmpty()) {

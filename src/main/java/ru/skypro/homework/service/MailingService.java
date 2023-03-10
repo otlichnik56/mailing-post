@@ -8,7 +8,7 @@ import ru.skypro.homework.repository.MailingRepository;
 import ru.skypro.homework.repository.PostRepository;
 
 import java.util.List;
-//
+
 @Service
 @AllArgsConstructor
 public class MailingService {
