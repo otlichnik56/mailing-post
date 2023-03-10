@@ -9,7 +9,6 @@ import javax.persistence.*;
 public class Post {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer index;
 
     String name;

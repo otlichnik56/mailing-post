@@ -16,15 +16,11 @@ public class Track {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    @ManyToOne
     @JoinColumn(name = "mailing_id")
-    @JsonBackReference
-    Mailing mailing;
+    Integer mailingId;
 
-    @ManyToOne
     @JoinColumn(name = "post_index")
-    @JsonBackReference
-    Post post;
+    Integer postIndex;
 
     LocalDateTime dateTime;
     Status status;
