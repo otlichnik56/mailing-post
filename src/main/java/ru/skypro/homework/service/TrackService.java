@@ -93,12 +93,13 @@ public class TrackService {
 
     private boolean checkLogic(Status status, TrackDto trackDto) {
         List<Track> history = trackRepository.findByMailingId(trackDto.getMailing());
-        Track track = history.get(history.size() - 1);
-        if (track == null) {
+        if (history.isEmpty()) {
             if (status.equals(Status.REGISTERED)) {
                 return true;
             }
         } else {
+            Track track = history.get(history.size() - 1);
+            Mailing mailing = mailingRepository.findById(track.getMailingId()).orElse(null);
             /**Если отправление зарегистрировано и новая запись убыло с одинаковыми индексами
              * вернет true
              */
@@ -120,7 +121,7 @@ public class TrackService {
             /**Если отправление прибыло и новая запись выдано с одинаковыми индексами
              * вернет true
              */
-            if (track.getStatus().equals(Status.ARRIVE) && status.equals(Status.RECEIVED) && track.getPostIndex().equals(trackDto.getPost())) {
+            if (track.getStatus().equals(Status.ARRIVE) && status.equals(Status.RECEIVED) && track.getPostIndex().equals(trackDto.getPost()) && trackDto.getPost().equals(mailing.getRecipientIndex())) {
                 return true;
             }
         }

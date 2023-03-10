@@ -2,7 +2,7 @@ CREATE TABLE mailings
 (
     id                  SERIAL PRIMARY KEY UNIQUE,
     type                TEXT,
-    recipient_index     INTEGER,
+    recipient_index     INTEGER REFERENCES posts(index),
     recipient_address   TEXT,
     recipient_name      TEXT
 );

@@ -40,7 +40,7 @@ public class MailingController {
     public ResponseEntity<?> createMailing(@RequestBody Mailing mailing) {
         logger.info("MailingController. method createMailing. Mailing = " + mailing);
         if (mailingService.createMailing(mailing) == null) {
-            return ResponseEntity.status(409).body("Perhaps a mailing with this identifier already exists");
+            return ResponseEntity.status(409).body("Perhaps a mailing list with this ID already exists or there is no post office with this index");
         } else {
             return ResponseEntity.status(200).body(mailing);
         }
