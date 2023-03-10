@@ -32,10 +32,10 @@ public class TrackController {
         return trackService.arriveMailing(trackDto);
     }
 
-    @PostMapping("/subsided")
-    public String subsidedMailing(@RequestBody TrackDto trackDto) {
-        logger.info("TrackController. method subsidedMailing. TrackDto = " + trackDto);
-        return trackService.subsidedMailing(trackDto);
+    @PostMapping("/departed")
+    public String departedMailing(@RequestBody TrackDto trackDto) {
+        logger.info("TrackController. method departedMailing. TrackDto = " + trackDto);
+        return trackService.departedMailing(trackDto);
     }
 
     @PostMapping("/received")

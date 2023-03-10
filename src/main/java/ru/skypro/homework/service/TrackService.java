@@ -32,8 +32,8 @@ public class TrackService {
         return generateTextAndSaveEntity(status, trackDto);
     }
 
-    public String subsidedMailing(TrackDto trackDto) {
-        Status status = Status.SUBSIDED;
+    public String departedMailing(TrackDto trackDto) {
+        Status status = Status.DEPARTED;
         return generateTextAndSaveEntity(status, trackDto);
     }
 
@@ -48,11 +48,15 @@ public class TrackService {
     }
 
     private String generateTextAndSaveEntity(Status status, TrackDto trackDto) {
-        if (check(trackDto)) {
-            Track track = insert(trackDto);
-            track.setStatus(status);
-            trackRepository.save(track);
-            return getString(track);
+        if (checkForAvailability(trackDto)) {
+            if (checkLogic(status, trackDto)) {
+                Track track = insert(trackDto);
+                track.setStatus(status);
+                trackRepository.save(track);
+                return getString(track);
+            } else {
+                return "violation of the logic of movement";
+            }
         } else {
             return "data entry error";
         }
@@ -64,7 +68,7 @@ public class TrackService {
                 return "Mailing " + track.getMailingId() + " registered with the post office " + track.getPostIndex() + " . Data and time: " + track.getDateTime();
             case ARRIVE:
                 return "Mailing " + track.getMailingId() + " arrive at the post office " + track.getPostIndex() + " . Data and time: " + track.getDateTime();
-            case SUBSIDED:
+            case DEPARTED:
                 return "Mailing " + track.getMailingId() + " left the post office " + track.getPostIndex() + " . Data and time: " + track.getDateTime();
             case RECEIVED:
                 return "Mailing " + track.getMailingId() + " issued to the recipient at the post office " + track.getPostIndex() + " . Data and time: " + track.getDateTime();
@@ -81,10 +85,47 @@ public class TrackService {
         return track;
     }
 
-    private boolean check(TrackDto trackDto) {
+    private boolean checkForAvailability(TrackDto trackDto) {
         Post post = postRepository.findByIndex(trackDto.getPost());
         Mailing mailing = mailingRepository.findById(trackDto.getMailing()).orElse(null);
         return post != null && mailing != null;
     }
+
+    private boolean checkLogic(Status status, TrackDto trackDto) {
+        List<Track> history = trackRepository.findByMailingId(trackDto.getMailing());
+        Track track = history.get(history.size() - 1);
+        if (track == null) {
+            if (status.equals(Status.REGISTERED)) {
+                return true;
+            }
+        } else {
+            /**Если отправление зарегистрировано и новая запись убыло с одинаковыми индексами
+             * вернет true
+             */
+            if (track.getStatus().equals(Status.REGISTERED) && status.equals(Status.DEPARTED) && track.getPostIndex().equals(trackDto.getPost())) {
+                return true;
+            }
+            /**Если отправление убыло и новая запись прибыло с разными индексами
+             * вернет true
+             */
+            if (track.getStatus().equals(Status.DEPARTED) && status.equals(Status.ARRIVE) && !track.getPostIndex().equals(trackDto.getPost())) {
+                return true;
+            }
+            /**Если отправление прибыло и новая запись убыло с одинаковыми индексами
+             * вернет true
+             */
+            if (track.getStatus().equals(Status.ARRIVE) && status.equals(Status.DEPARTED) && track.getPostIndex().equals(trackDto.getPost())) {
+                return true;
+            }
+            /**Если отправление прибыло и новая запись выдано с одинаковыми индексами
+             * вернет true
+             */
+            if (track.getStatus().equals(Status.ARRIVE) && status.equals(Status.RECEIVED) && track.getPostIndex().equals(trackDto.getPost())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 }
