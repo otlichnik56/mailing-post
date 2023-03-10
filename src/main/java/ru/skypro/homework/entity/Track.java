@@ -2,7 +2,7 @@ package ru.skypro.homework.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
-import ru.skypro.homework.model.Status;
+import ru.skypro.homework.dto.Status;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

@@ -1,12 +1,9 @@
 package ru.skypro.homework.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
-import ru.skypro.homework.model.Type;
+import ru.skypro.homework.dto.Type;
 import javax.persistence.*;
-import java.util.Collection;
 
-//
 @Data
 @Entity
 @Table(name = "mailings")

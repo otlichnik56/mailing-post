@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.skypro.homework.entity.Mailing;
 import ru.skypro.homework.repository.MailingRepository;
 import java.util.List;
-
+//
 @Service
 @AllArgsConstructor
 public class MailingService {
