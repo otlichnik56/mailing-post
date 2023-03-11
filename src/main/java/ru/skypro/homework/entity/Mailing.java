@@ -1,12 +1,12 @@
 package ru.skypro.homework.entity;
 
 import lombok.Data;
-import ru.skypro.homework.model.Type;
+import ru.skypro.homework.dto.Type;
 import javax.persistence.*;
-//
+
 @Data
 @Entity
-@Table(name = "mailing")
+@Table(name = "mailings")
 public class Mailing {
 
     @Id

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.skypro.homework.entity.Post;
 import ru.skypro.homework.repository.PostRepository;
 import java.util.List;
-//
+
 @Service
 @AllArgsConstructor
 public class PostService {
@@ -20,17 +20,31 @@ public class PostService {
     }
 
     public Post createPost(Post post) {
-        return postRepository.save(post);
+        Post postCreate = postRepository.findById(post.getIndex()).orElse(null);
+        if (postCreate == null) {
+            return postRepository.save(post);
+        } else {
+            return null;
+        }
     }
 
-    public Post updatePost(Integer index, Post post) {
-        Post post1 = postRepository.findById(index).orElse(null);
-        return postRepository.save(post);
+    public Post updatePost(Post post) {
+        Post postUpdate = postRepository.findByIndex(post.getIndex());
+        if (postUpdate != null) {
+            return postRepository.save(post);
+        } else {
+            return null;
+        }
     }
 
     public boolean deletePost(Integer index) {
         Post post = postRepository.findById(index).orElse(null);
-        return post != null;
+        if (post == null) {
+            return false;
+        } else {
+            postRepository.deleteById(index);
+            return true;
+        }
     }
 
 }
